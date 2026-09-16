@@ -10,9 +10,9 @@ mimicDetector's original validation surveyed 17 pathogens against the human prot
 
 | Role | Organism | Accession | Why |
 |---|---|---|---|
-| Pathogen | *Aspergillus flavus* (strain NRRL 3357) | UniProt UP000001875 | Major pre- and post-harvest pathogen of peanut, causes yellow mold disease and aflatoxin (carcinogenic) contamination |
-| Host | *Arachis hypogaea* / peanut (cv. Tifrunner) | UniProt UP000289738 | Allotetraploid crop host |
-| Negative control | *Aspergillus oryzae* (strain RIB40) | UniProt UP000006564 | Domesticated, non-pathogenic close relative (~99.5% homology to *A. flavus*); used for the pipeline's bitscore-difference filter |
+| Pathogen | *Aspergillus flavus* (strain NRRL 3357) | [UniProt UP000001875](https://www.uniprot.org/proteomes/UP000001875) | Major pre- and post-harvest pathogen of peanut, causes yellow mold disease and aflatoxin (carcinogenic) contamination |
+| Host | *Arachis hypogaea* / peanut (cv. Tifrunner) | [UniProt UP000289738](https://www.uniprot.org/proteomes/UP000289738) | Allotetraploid crop host |
+| Negative control | *Aspergillus oryzae* (strain RIB40) | [UniProt UP000006564](https://www.uniprot.org/proteomes/UP000006564) | Domesticated, non-pathogenic close relative (~99.5% homology to *A. flavus*); used for the pipeline's bitscore-difference filter |
 
 Full provenance, including URLs and selection rationale, in `data/metadata/proteome_manifest.tsv`.
 
