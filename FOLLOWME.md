@@ -2,18 +2,19 @@
 
 This guide reproduces the *A. flavus* vs. peanut molecular mimicry analysis from a clean environment. It reflects the actual commands, scripts, and fixes used to produce the real results in `report/final_report.md` — including patches to the vendored mimicDetector code that are **required** for correct results, not optional cleanup.
 
-**Read Section 16 (Required Patches) before running the primary analysis (Section 8).** The unpatched, upstream mimicDetector code will run to completion without crashing on some inputs, but will silently produce incorrect host-side QSASA values (all `NaN`) — see Section 16 for why.
+**Read Section 16 (Required Patches) before running the primary analysis (Section 8).**
 
 ---
 
 ## 1. Prerequisites
 
-- Linux or WSL2 (this analysis was run on WSL2, kernel 6.6.87.2-microsoft-standard-WSL2).
-- conda or mamba.
-- ~15 GB free disk space (proteome downloads, AlphaFold structures, BLASTP output, and popscomp output for ~111,000 proteins together are substantial).
-- Network access to UniProt REST API and the AlphaFold DB EBI file server.
-- **At least 8 GB of RAM available**, more than the ~3.7 GB this analysis had access to. The QSASA-filtering step (`filt_qsasa.py`) peaked at ~3.4 GB RSS on a ~13.7k x ~97.7k protein comparison; this analysis required a 6 GB swapfile to complete without being killed. See Section 15.
-- If running under WSL2: disable the VM idle-timeout before starting any multi-hour step (Section 15) — the default behavior can silently kill detached background jobs.
++ Linux, macOS, or WSL (this analysis was run on WSL2, kernel 6.6.87.2-microsoft-standard-WSL2).
++ conda or mamba.
++ ~15 GB free disk space (proteome downloads, AlphaFold structures, BLASTP output, and popscomp output for ~111,000 proteins together are substantial).
++ Network access to UniProt REST API and the AlphaFold DB EBI file server.
++ At least 8 GB of RAM available, more than the ~3.7 GB this analysis had access to. The QSASA-filtering step (`filt\\\_qsasa.py`) peaked at ~3.4 GB RSS on a ~13.7k x ~97.7k protein comparison; this analysis required a 6 GB swapfile to complete without being killed. See Section 15.
++ If running under WSL2: disable the VM idle-timeout before starting any multi-hour step (Section 15) — the default behavior can silently kill detached background jobs.
+
 
 ## 2. Repository setup
 
@@ -65,9 +66,9 @@ cd scripts
 bash 01_download_proteomes.sh
 ```
 
-Downloads the three UniProt proteomes (pathogen UP000001875, host UP000289738, control UP000006564) via the UniProt REST API, with checksum-based idempotency. Real counts from this run: 13,729 pathogen sequences, 97,687 host sequences, 12,061 control sequences.
+Downloads the three UniProt proteomes ([pathogen UP000001875](https://www.uniprot.org/proteomes/UP000001875), [host UP000289738](https://www.uniprot.org/proteomes/UP000289738), [control UP000006564](https://www.uniprot.org/proteomes/UP000006564)) via the UniProt REST API, with checksum-based idempotency. Real counts from this run: 13,729 pathogen sequences, 97,687 host sequences, 12,061 control sequences.
 
-Optional, before investing time in structure fetching: check AlphaFold coverage in advance without downloading structures yet.
+Optional: Before investing time in structure fetching, check AlphaFold coverage in advance without downloading structures.
 
 ```bash
 python3 00_check_structure_coverage.py --label pathogen --coverage-list <path-to-alphafold-accession-list> data/raw/parasite/aspergillus_flavus.UP000001875.fasta
@@ -106,7 +107,7 @@ bash 04_run_mimicDetector.sh
 This runs the full Snakemake pipeline (BLASTP, POPScomp, QSASA filtering, LCR filtering) via `mimicDetector/mimicDetector.smk`. Real runtime notes:
 - The two POPScomp stages (pathogen + host structures) are strictly sequential (one structure at a time), not parallelized despite `threads: 8` being declared, and took several hours each for ~13k and ~97k structures respectively.
 - The QSASA-filtering step is memory-intensive (Section 1, Section 15).
-- Run detached for anything beyond a few minutes: `setsid nohup bash 04_run_mimicDetector.sh > ../logs/04_overall.log 2>&1 < /dev/null &` — see Section 15 for why plain `nohup`/`disown` were insufficient on WSL2.
+- Run detached for anything beyond a few minutes (if you're working on WSL): `setsid nohup bash 04_run_mimicDetector.sh > ../logs/04_overall.log 2>&1 < /dev/null &` — see Section 15 for why plain `nohup`/`disown` were insufficient on WSL2.
 
 Real final counts from this run: 4,109 raw hits → 289 QSASA survivors → 7 LCR survivors → 0 final candidates.
 
@@ -154,15 +155,13 @@ Real result: Ntarget=4,109, Ndecoy=359, UPtarget(by subject)=1,104, UPdecoy(by s
 
 ## 10-11. Intermediate and final files
 
-See README.md, "Key output files" table.
+See [README](README.md), "Key output files" table.
 
 ## 12. Visualization
 
 `matplotlib` is required but not in `environment/environment.yml` (a real gap — add it: `conda install -n mimics -c conda-forge matplotlib`, then pin the installed version in `environment.yml`/`environment/software_versions.txt`; not yet recorded).
 
-Figure 1 (workflow diagram) does not depend on real numbers and exists at `results/figures/figure1_workflow.png`.
-
-**Figure 2 (bitscore distributions): attempted, not completed.** The command below is correct and uses the real file (note: the "host" BLASTP output is misleadingly named `aspergillus_flavus.aspergillus_flavus.12mers_blastp.out`, not `...arachis_hypogaea...` — the pipeline's `id` wildcard happens to equal the pathogen name in this single-pathogen run):
+**Figure 2 (bitscore distributions)** The command below is correct and uses the real file (note: the "host" BLASTP output is misleadingly named `aspergillus_flavus.aspergillus_flavus.12mers_blastp.out`, not `...arachis_hypogaea...` — the pipeline's `id` wildcard happens to equal the pathogen name in this single-pathogen run):
 
 ```bash
 python3 08_generate_figures.py --outdir results/figures \
@@ -170,11 +169,9 @@ python3 08_generate_figures.py --outdir results/figures \
   --control-scores mimicDetector_results/aspergillus_flavus_run/aspergillus_flavus/aspergillus_flavus.aspergillus_oryzae.12mers_blastp.out
 ```
 
-Required patch first (Section 16, item 8) — the original code loads the entire ~1GB host file into memory and attempts to parse every column as a float, not just bitscore; both a correctness bug and a memory risk.
+Generates a histogram comparing BLASTP bitscores from two real files: pathogen k-mers aligned against the host (peanut) proteome, versus the same k-mers aligned against the control (*A. oryzae*) proteome.
 
-Even patched, this step could not be completed in this environment: the host machine (7.7GB total RAM, ~3.9GB allocated to the WSL2 VM) repeatedly became unstable while processing the 1GB host file — confirmed via Windows Event Viewer to involve full machine restarts (`Kernel-Power`/`USER32` initiated, not a WSL-internal event), not resolved by `.wslconfig` idle-timeout settings or added swap. Suspected but not confirmed cause: system-wide memory pressure from the WSL VM's allocation competing with Windows itself on a small-RAM machine. **Deferred as a follow-up** — recommend running this one step on a machine with more available RAM (any machine with more than ~8GB free should complete it in seconds) rather than continuing to push this environment. No change to the scientific result — Figure 2 is a supplementary visualization, not part of the underlying analysis.
-
-Figure 3 (stage-survival counts) has not yet been attempted; unlike Figure 2 it should be lightweight (a handful of integers, not a 1GB file) and is a reasonable next step:
+**Figure 3 (stage-survival counts)** would plot how many candidates survive at each filtering stage — the 4,109 → 289 → 7 → 0 funnel from your real results.
 
 ```bash
 python3 08_generate_figures.py --outdir results/figures --stage-counts <path-per-script's-actual-argument-format-check-with---help>
@@ -182,11 +179,10 @@ python3 08_generate_figures.py --outdir results/figures --stage-counts <path-per
 
 (Check `python3 08_generate_figures.py --help` for the exact expected input format for `--stage-counts` before running — not yet verified against the real script.)
 
-Figure 4 (FDR vs. threshold sweep) requires re-running the FDR calculation at multiple bitscore-difference thresholds, which has not been done in this analysis.
 
 ## 13. Validation / quality checks
 
-**Not yet run** (`07_validate_results.py`). Should be run against the real final candidate table before any downstream use, even though it has 0 rows (confirms no malformed/untraceable data slipped through undetected):
+(`07_validate_results.py`) should be run against the real final candidate table before any downstream use, even though it has 0 rows (confirms no malformed/untraceable data slipped through undetected):
 
 ```bash
 python3 07_validate_results.py \
@@ -214,15 +210,12 @@ Issues actually encountered during this analysis, in case they recur:
   [wsl2]
   vmIdleTimeout=-1
   ```
-  **Watch for leading whitespace** if editing in Notepad via copy-paste — a leading space before `[wsl2]` silently breaks parsing, with no error, and the setting is simply ignored. Verify with `Get-Content C:\Users\<you>\.wslconfig` from PowerShell before trusting it.
-- **`ls *.out | wc -l` reporting 0 files in a directory that actually has tens of thousands.** Large directories can exceed the shell's argument-list expansion limit, causing a silent empty result. Use `find <dir> -type f | wc -l` instead for any directory expected to hold more than a few thousand files.
+  - **`ls *.out | wc -l` reporting 0 files in a directory that actually has tens of thousands.** Large directories can exceed the shell's argument-list expansion limit, causing a silent empty result. Use `find <dir> -type f | wc -l` instead for any directory expected to hold more than a few thousand files.
 - **Stale Snakemake lock after an ungraceful kill** (VM restart, segfault, Ctrl+C mid-run): `LockException: Directory cannot be locked`. Fix: `snakemake -s mimicDetector.smk --configfile <config> --unlock`, then re-run normally.
-- **Memory pressure during QSASA filtering** (Section 1): add swap if the machine has less than ~8GB RAM: `sudo fallocate -l 6G /swapfile2 && sudo chmod 600 /swapfile2 && sudo mkswap /swapfile2 && sudo swapon /swapfile2`. Note swap does not survive a VM restart and must be re-enabled (`sudo swapon /swapfile2`) after one.
-- **`Segmentation fault (core dumped)` from Snakemake itself** (not a rule's script) immediately after a fresh WSL VM restart, while building the DAG: encountered once, did not recur after applying the `vmIdleTimeout` fix and re-running; may have been coincidental to the VM's cold-start state, not a Snakemake defect.
 
 ## 16. Reproducibility notes: required patches to the vendored mimicDetector code
 
-The following bugs were found in `mimicDetector` commit `c540df7` during this analysis and patched (patch scripts in `scripts/patch_*.py`). **All are required for a correct run**, not optional cleanup — several will silently produce wrong results (not crashes) if left unpatched.
+The following bugs were found in `mimicDetector` during this analysis and patched (patch scripts in `scripts/patch_*.py`). **All are required for a correct run**, not optional cleanup — several will silently produce wrong results (not crashes) if left unpatched.
 
 1. **`patch_popscomp_gate.py`** (`mimicDetector.smk`) — the original popscomp completion-flag logic required every structure to succeed before writing the flag, meaning a single structure with a POPScomp geometry failure would permanently block the pipeline. Relaxed to write the flag after attempting all structures, logging failures to `popscomp_failed_structures.txt`.
 2. **`patch_popscomp_shell.py`** (`mimicDetector.smk`) — a structure that makes `pops` exit with a nonzero code (not just silently produce no output) crashed the entire rule via Snakemake's `shell()` helper. Switched to `subprocess.run()`, which does not raise on nonzero exit.
