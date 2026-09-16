@@ -14,7 +14,7 @@ mimicDetector's original validation surveyed 17 pathogens against the human prot
 | Host | *Arachis hypogaea* / peanut (cv. Tifrunner) | [UniProt UP000289738](https://www.uniprot.org/proteomes/UP000289738) | Allotetraploid crop host |
 | Negative control | *Aspergillus oryzae* (strain RIB40) | [UniProt UP000006564](https://www.uniprot.org/proteomes/UP000006564) | Domesticated, non-pathogenic close relative (~99.5% homology to *A. flavus*); used for the pipeline's bitscore-difference filter |
 
-Full provenance, including URLs and selection rationale, in `data/metadata/proteome_manifest.tsv`.
+Full provenance, including URLs and selection rationale, in [data/metadata/proteome_manifest.tsv](data/metadata/proteome_manifest.tsv).
 
 ## Analytical workflow
 
@@ -27,7 +27,7 @@ Full provenance, including URLs and selection rationale, in `data/metadata/prote
 7. Re-score final candidates with an independent local realignment; retain E-value ≤0.001.
 8. Estimate false discovery rate via a shuffled-peanut decoy database, using the target-decoy method.
 
-Full step-by-step commands: **`FOLLOWME.md`**. Full results and their interpretation: **`report/final_report.md`**.
+Full step-by-step commands: **[FOLLOWME](FOLLOWME.md)**. Full results and their interpretation: **[Report](report/final_report.md)**.
 
 ## Software and versions
 
