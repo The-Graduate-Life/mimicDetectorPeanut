@@ -10,7 +10,7 @@ This project used Claude (Anthropic) as a coding and technical-writing assistant
 
 **Original scripts.** Claude wrote `scripts/build_decoy_hcfiltered.py` (replicates the pipeline's bitscore-difference filter against the decoy database) and `scripts/diagnose_lcr_evalue.py` (a read-only diagnostic for inspecting borderline candidates).
 
-**Documentation.** Claude drafted and revised `README.md`, `FOLLOWME.md`, and `report/final_report.md`, and reviewed them for internal consistency, stale/placeholder content, and unsupported claims.
+**Documentation.** Claude revised `README.md`, `FOLLOWME.md`, and `report/final_report.md`, and reviewed them for internal consistency, stale/placeholder content, and unsupported claims.
 
 ## What the AI did not do
 
