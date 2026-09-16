@@ -58,7 +58,7 @@ The 7 LCR-survivors were borderline misses, not far outliers: E-values ranged 0.
 No candidates survive the full pipeline at the stated thresholds. Combined with the ~56% FDR at the initial filtering stage, this indicates the raw candidate pool is already substantially noise-dominated before structural filtering is even applied — the zero final count is not simply an artifact of an overly conservative downstream threshold. Given this, no biological interpretation of specific candidate proteins is offered here; there are none that meet the pipeline's own significance criteria.
 
 ## 10. Controls and reproducibility
-Negative control: Section 6. FDR: Section 7. Full environment and command provenance: `environment/software_versions.txt`. See `FOLLOWME.md` for the complete, step-by-step reproduction procedure, including the code fixes required to run this pipeline correctly (Section 11).
+Negative control: Section 6. FDR: Section 7. Full environment and command provenance: `environment/software_versions.txt`. See `FOLLOWME.md` for the complete, step-by-step reproduction procedure, including the code fixes required to run this pipeline correctly (Section 16).
 
 ## 11. Limitations
 - Sequence similarity detected by this pipeline is NOT evidence of functional mimicry, structural mimicry, or biochemical interaction — only of sequence-level candidate mimicry meeting the stated statistical criteria.
