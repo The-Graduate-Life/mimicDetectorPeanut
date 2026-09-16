@@ -44,6 +44,7 @@ Full environment record, including real execution dates and known compute constr
 ├── README.md                    This file
 ├── FOLLOWME.md                  Step-by-step reproduction guide
 ├── COPYING.md                   License
+├── AI_DISCLOSURE.md             AI Use Disclosure
 ├── mimicDetector/                Vendored mimicDetector tool (git clone,
 │                                  commit c540df7). This is the ONLY copy
 │                                  of the pipeline code that is actually
