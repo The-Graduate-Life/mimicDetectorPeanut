@@ -1,0 +1,6 @@
+control	UP000006564	aspergillus_oryzae	../data/raw/control/aspergillus_oryzae.UP000006564.fasta	12061	4a004ffa906d27d2150640c4c03965bd0a8a2265f32146049bea3976f1ce20ed	2026-09-11T22:27:57Z
+parasite	UP000001875	aspergillus_flavus	../data/raw/parasite/aspergillus_flavus.UP000001875.fasta	0	e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855	2026-09-11T22:27:57Z
+control	UP000006564	aspergillus_oryzae	../data/raw/control/aspergillus_oryzae.UP000006564.fasta	12061	4a004ffa906d27d2150640c4c03965bd0a8a2265f32146049bea3976f1ce20ed	2026-09-11T22:51:05Z
+control	UP000006564	aspergillus_oryzae	../data/raw/control/aspergillus_oryzae.UP000006564.fasta	12061	4a004ffa906d27d2150640c4c03965bd0a8a2265f32146049bea3976f1ce20ed	2026-09-11T23:17:18Z
+parasite	UP000001875	aspergillus_flavus	../data/raw/parasite/aspergillus_flavus.UP000001875.fasta	13729	d1375bcff039f44109a7ff2304af37307115dfaee328d14cd4d45a09e6a4b9ae	2026-09-11T23:17:18Z
+host	UP000289738	arachis_hypogaea	../data/raw/host/arachis_hypogaea.UP000289738.fasta	97687	02f345f7b10c5c63c1bd3036a5e69778bf043139309de7d07b4346f5adb98cce	2026-09-12T03:19:40Z

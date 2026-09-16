@@ -1,0 +1,63 @@
+SOFTWARE / ENVIRONMENT RECORD
+(fields marked PENDING must be filled in at actual install/run time,
+ by capturing the real command output — never invented)
+
+Operating system:              Linux Fritzner 6.6.87.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun 5 18:30:46 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+Environment manager:           conda / mamba (per repo README)
+Conda/mamba version:           conda 26.3.2
+Environment name:              mimics (from environment.yml)
+Python version:                3.11.12  (pinned in environment.yml)
+Snakemake version:             7.32.4   (pinned in environment.yml)
+BLAST+ version:                2.16.0   (pinned in environment.yml;
+                                the mimicDetector README states bitscore/
+                                E-value stats are computed from the
+                                BLASTP v2.16.0 PAM30 LAMBDA/K stats table,
+                                so this exact version should be used)
+Segmasker:                     ships with the blast+ 2.16.0 conda package
+                                above (same binary distribution as blastp)
+BEDTools version:               2.31.1  (pinned in environment.yml)
+Biopython version:              1.85    (pinned in environment.yml)
+pandas version:                 2.2.3   (pinned in environment.yml)
+pybedtools version:              0.12.0  (pinned in environment.yml)
+
+POPSCOMP:
+  Not distributed via the mimics conda environment. Repository README
+  states it must be pre-installed separately from
+  https://github.com/Fraternalilab/POPScomp
+  Installed at:                 ~/POPScomp/POPSC/src/pops
+  Version/commit installed:     not recorded at install time -- if
+                                 installed via git clone, record with
+                                 `cd ~/POPScomp && git log -1`
+  Installation method used:     not recorded
+
+mimicDetector repository:
+  URL:            https://github.com/Kayleerich/mimicDetector
+  Commit/version: c540df77788d8296f62ba662f5e3b673d9c0ec34
+  Clone date:     2026-09-11
+
+Hardware / compute resources:
+  Environment:     WSL2 (Linux 6.6.87.2-microsoft-standard-WSL2), Windows host
+  CPU allocation:  8 threads (config.yaml max_threads=8; blastp -num_threads 8)
+  Memory:          ~3.7-3.9 GB allocated to the WSL2 VM (hv_balloon max
+                   dynamic memory size 3964 MB). This was insufficient for
+                   the QSASA-filtering step (filt_qsasa.py) at peak load;
+                   a 6 GB swapfile was added mid-run as a mitigation (see
+                   FOLLOWME.md Troubleshooting). A machine with more
+                   directly-available RAM is recommended for re-runs.
+  Wall time:       Not precisely measured due to multiple interrupted runs
+                   (WSL VM restarts, a stale Snakemake lock, a host-file
+                   path bug requiring a full re-run of filter_qsasa) --
+                   see FOLLOWME.md Troubleshooting for the full incident
+                   history. Approximate active compute, uninterrupted:
+                   host+pathogen POPScomp stages, several hours each;
+                   decoy BLASTP run (pathogen k-mers vs 97,687-sequence
+                   shuffled decoy), several hours.
+
+Execution dates:
+  Proteome download:      2026-09-11 (config.yaml date field)
+  QC:                     2026-09-11/12
+  mimicDetector run:      2026-09-13 to 2026-09-14 (spanned multiple
+                          sessions; see FOLLOWME.md Troubleshooting)
+  Decoy/FDR calculation:  2026-09-14
+  Validation:             NOT YET RUN (scripts/07_validate_results.py)
+  Figure generation:      NOT YET RUN (scripts/08_generate_figures.py)
