@@ -85,6 +85,7 @@ Full environment record, including real execution dates and known compute constr
 │                                   example (not real biological results)
 └── logs/                           Execution logs
 ```
+***Important note***: Part of this repository structure will be available only after cloning [mimicDetector](https://github.com/Kayleerich/mimicDetector) original repository.
 
 ## Key output files
 
@@ -110,7 +111,7 @@ Under `mimicDetector_results/aspergillus_flavus_run/aspergillus_flavus/`:
 
 ## Reproducibility
 
-See **`FOLLOWME.md`** for the complete, tested, step-by-step procedure, including the real bugs found in the vendored mimicDetector code and the exact fixes applied (necessary for the pipeline to run to completion — the unpatched upstream code will not produce correct QSASA values for the host side, among other issues).
+See **[FOLLOWME](FOLLOWME.md)** for the complete, tested, step-by-step procedure, including the real bugs found in the vendored mimicDetector code and the exact fixes applied (necessary for the pipeline to run to completion — the unpatched upstream code will not produce correct QSASA values for the host side, among other issues).
 
 ## Citation
 
